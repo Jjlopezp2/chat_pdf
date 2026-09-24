@@ -10,29 +10,29 @@ from langchain.chains.question_answering import load_qa_chain
 import platform
 
 # App title and presentation
-st.title('Generación Aumentada por Recuperación (RAG) 💬')
+st.title('Let's get the Robot to Read!')
 st.write("Versión de Python:", platform.python_version())
 
 # Load and display image
 try:
-    image = Image.open('Chat_pdf.png')
+    image = Image.open('cartoon-image-of-a-robot-reading-a-book-vector.jpg')
     st.image(image, width=350)
 except Exception as e:
     st.warning(f"No se pudo cargar la imagen: {e}")
 
 # Sidebar information
 with st.sidebar:
-    st.subheader("Este Agente te ayudará a realizar análisis sobre el PDF cargado")
+    st.subheader("Your robot buddy will read whatever you need")
 
 # Get API key from user
-ke = st.text_input('Ingresa tu Clave de OpenAI', type="password")
+ke = st.text_input('Insert your OpenAI password, please', type="password")
 if ke:
     os.environ['OPENAI_API_KEY'] = ke
 else:
-    st.warning("Por favor ingresa tu clave de API de OpenAI para continuar")
+    st.warning("Please insert your OpenAI password to continue")
 
 # PDF uploader
-pdf = st.file_uploader("Carga el archivo PDF", type="pdf")
+pdf = st.file_uploader("Upload your PDF file here", type="pdf")
 
 # Process the PDF if uploaded
 if pdf is not None and ke:
@@ -43,7 +43,7 @@ if pdf is not None and ke:
         for page in pdf_reader.pages:
             text += page.extract_text()
         
-        st.info(f"Texto extraído: {len(text)} caracteres")
+        st.info(f"Text extracted: {len(text)} characters")
         
         # Split text into chunks
         text_splitter = CharacterTextSplitter(
@@ -53,7 +53,7 @@ if pdf is not None and ke:
             length_function=len
         )
         chunks = text_splitter.split_text(text)
-        st.success(f"Documento dividido en {len(chunks)} fragmentos")
+        st.success(f"Document divided into {len(chunks)} fragments")
         
         # Create embeddings and knowledge base
         embeddings = OpenAIEmbeddings()
@@ -61,7 +61,7 @@ if pdf is not None and ke:
         
         # User question interface
         st.subheader("Escribe qué quieres saber sobre el documento")
-        user_question = st.text_area(" ", placeholder="Escribe tu pregunta aquí...")
+        user_question = st.text_area(" ", placeholder="Ask it anything...")
         
         # Process question when submitted
         if user_question:
@@ -82,11 +82,11 @@ if pdf is not None and ke:
             st.markdown(response)
                 
     except Exception as e:
-        st.error(f"Error al procesar el PDF: {str(e)}")
+        st.error(f"Error: {str(e)}")
         # Add detailed error for debugging
         import traceback
         st.error(traceback.format_exc())
 elif pdf is not None and not ke:
-    st.warning("Por favor ingresa tu clave de API de OpenAI para continuar")
+    st.warning("Please input your OpenAI password to continue")
 else:
-    st.info("Por favor carga un archivo PDF para comenzar")
+    st.info("Please upload a PDF file to continue")
