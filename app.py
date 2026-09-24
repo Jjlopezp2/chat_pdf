@@ -10,7 +10,7 @@ from langchain.chains.question_answering import load_qa_chain
 import platform
 
 # App title and presentation
-st.title('Let's get the Robot to Read!')
+st.title("Let's get the Robot to Read!")
 st.write("Versión de Python:", platform.python_version())
 
 # Load and display image
